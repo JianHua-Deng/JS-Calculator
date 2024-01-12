@@ -1,5 +1,4 @@
 const equal = document.querySelector(".equal");
-const enteredContents = document.querySelector(".entered");
 const result = document.querySelector(".entered");
 const clearButton = document.querySelector(".clear");
 const delButton = document.querySelector(".delete");
@@ -14,6 +13,11 @@ buttonList.forEach(element => {
     element.addEventListener("click", displayEntered);    
 });
 
+function isOperator(c){
+    return (c == '+' || c == '-' || c == '*' || c == '/' || c == '%');
+
+}
+
 function displayEntered(){
 
     if(this.className == "nums"){
@@ -21,39 +25,31 @@ function displayEntered(){
             firstOperand += this.textContent;
         }else{
             secondOperand += this.textContent;
-            //console.log("runs me");
         }
         result.textContent += this.textContent;
     }else{
          if(operator == '' || secondOperand == ''){
             operator = this.textContent;
-            result.textContent += this.textContent;
+            
+            if(isOperator(result.textContent.charAt(result.textContent.length - 1))){
+                //replace the last char in enteredContents to the newly pressed operator
+                result.textContent = result.textContent.slice(0, -1) + this.textContent;
+            }else{
+                result.textContent += this.textContent;
+            }
+
          }else{
             //if firstOperand and secondOperand already has number, and operator alraedy has a operator, calculates them
-            firstOperand = calculations()
+            firstOperand = String(calculations());
             operator = this.textContent;
             secondOperand = '';
             result.textContent = firstOperand + operator;
-            //console.log(firstOperand + " Runs calculations");
          }
     }
-    console.log(firstOperand + " " + operator + " " + secondOperand);
-
-    /*
-    if(enteredContents.textContent == "0"){
-        enteredContents.textContent = this.textContent;
-    }else{
-        //if this.id is a operator, and the last character of the enteredContents is also a operator
-        if(this.id == "operators" && isOperator(enteredContents.textContent.charAt(enteredContents.textContent.length - 1))){
-            //replace the last char in enteredContents to the newly pressed operator
-            enteredContents.textContent = enteredContents.textContent.slice(0, -1) + this.textContent;
-        }else{
-            enteredContents.textContent += this.textContent;
-        }
-    }
-    */
+    //console.log(firstOperand + " " + operator + " " + secondOperand);
 
 }
+
 
 function calculations(){
     switch(operator){
@@ -71,22 +67,29 @@ function calculations(){
 }
 
 function removeChar(){
-    enteredContents.textContent = enteredContents.textContent.substring(0, enteredContents.textContent.length - 1);
-    if(secondOperand != ''){
+    result.textContent = result.textContent.substring(0, result.textContent.length - 1);
+
+    if(secondOperand.length > 0){
         secondOperand = secondOperand.substring(0, secondOperand.length - 1);
-    }else if (operator != ''){
+
+    }else if (operator.length > 0){
         operator = '';
+
     }else{
-        firstOperand = firstOperand.substring(0, firstOperand.length - 1);
+        if(firstOperand.length > 0){
+            firstOperand = firstOperand.substring(0, firstOperand.length - 1);
+        }
     }
 }
 
 function equalOperation(){
-    let ans = ''
     if(firstOperand != '' && operator != '' && secondOperand != ''){
-        ans = calculations()
+        firstOperand = String(calculations());
+        operator = '';
+        secondOperand = '';
+        result.textContent = firstOperand;
     }
-    result.textContent = ans;
+
 }
 
 function clear(){
