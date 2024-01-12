@@ -20,7 +20,9 @@ function isOperator(c){
 
 function displayEntered(){
 
-    if(this.className == "nums"){
+    if(firstOperand.length > 13 || secondOperand.length > 13){
+        result.textContent = "NaN";
+    }else if(this.className == "nums"){
         if(operator == ''){
             firstOperand += this.textContent;
         }else{
